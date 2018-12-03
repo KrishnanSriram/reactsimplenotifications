@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import HomePage from './pages/home';
 import AboutPage from './pages/about';
 import TopicsPage from './pages/topics';
+import TopicsTab from './pages/topicstab';
 import SettingsPage from './pages/settings';
 import Navbar from './components/navbar';
 
@@ -13,7 +14,7 @@ const App = () => (
 
       <Route exact path="/" component={HomePage} />
       <Route path="/about" component={AboutPage} />
-      <Route path="/topics" component={TopicsPage} />
+      <Route path="/topics" component={TopicsTab} />
       <Route path="/settings" component={SettingsPage} />
     </div>
   </Router>
