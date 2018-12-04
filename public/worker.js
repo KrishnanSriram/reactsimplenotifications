@@ -40,10 +40,20 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event) {
   console.log('[ServiceWorker] Fetch', event.request.url);
   event.respondWith(
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.match(event.request).then(function (response) {
+        return response || fetch(event.request).then(function(response) {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
+    })
+  );
+  /*event.respondWith(
    caches.match(event.request).then(function(response) {
      return response || fetch(event.request);
    })
- );
+ );*/
 });
 
 self.addEventListener('push', function(event) {
