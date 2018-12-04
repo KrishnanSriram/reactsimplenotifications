@@ -22,6 +22,14 @@ class SettingsPage extends Component {
 
   }
 
+  componentDidMount = () => {
+    navigator.serviceWorker.ready
+    .then((swRegistration) => {
+      console.log('Now we have a pwasync registration done');
+      return swRegistration.sync.register('pwasync');
+    });
+  }
+
   render() {
     const { classes } = this.props;
     return (

@@ -1,9 +1,9 @@
 
 const CACHE_NAME = 'pwa-app-cache';
-self.addEventListener('install', function(event) {
+self.addEventListener('install', (event) => {
   console.log('[ServiceWorker] Install');
   event.waitUntil(
-   caches.open(CACHE_NAME).then(function(cache) {
+   caches.open(CACHE_NAME).then((cache) => {
      return cache.addAll([
        '/',
        '/about',
@@ -18,7 +18,7 @@ self.addEventListener('install', function(event) {
  );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', (event) => {
   console.log('[ServiceWorker] Activate');
   const currentCachelist = [CACHE_NAME];
   event.waitUntil(
@@ -33,9 +33,25 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', (event) => {
   console.log('[ServiceWorker] Fetch', event.request.url);
+  // NETWORK first approach
   event.respondWith(
+    fetch(event.request).then(function(res) {
+      return caches.open(CACHE_NAME).then(function(cache) {
+          // Put in cache if succeeds
+          cache.put(event.request.url, res.clone());
+          return res;
+        })
+      }).catch(function(err) {
+        console.log('[Service Worker] Network not available. Fetching from cache!');
+        // Fallback to cache
+        return caches.match(event.request);
+      })
+  );
+
+  //CACHE first approach
+  /*event.respondWith(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request).then(function(response) {
@@ -44,10 +60,10 @@ self.addEventListener('fetch', function(event) {
         });
       });
     })
-  );
+  );*/
 });
 
-self.addEventListener('push', function(event) {
+self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
 
@@ -59,4 +75,12 @@ self.addEventListener('push', function(event) {
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'pwasync') {
+    event.waitUntil(
+      console.log('[Service Worker] sync event FIRED')
+    );
+  }
 });
