@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Title from './../components/title';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,15 +6,17 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    width: '90%',
     marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
+    align: 'center',
   },
   table: {
-    minWidth: 700,
+    minWidth: 600,
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -68,54 +68,33 @@ class ListTopicsPage extends Component {
    All table related functions are here
    */
 
-
-
-
-id = 0;
-createData = (name, calories, fat, carbs, protein) => {
-  this.id += 1;
-  return { id: this.id, name, calories, fat, carbs, protein };
-}
-
-rows = [
-  this.createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  this.createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  this.createData('Eclair', 262, 16.0, 24, 6.0),
-  this.createData('Cupcake', 305, 3.7, 67, 4.3),
-  this.createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-  renderTable = () => {
+  renderTable = (rows) => {
     const {classes} = this.props;
     return (
-      <Paper className={classes.root}>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <CustomTableCell>Dessert (100g serving)</CustomTableCell>
-            <CustomTableCell numeric>Calories</CustomTableCell>
-            <CustomTableCell numeric>Fat (g)</CustomTableCell>
-            <CustomTableCell numeric>Carbs (g)</CustomTableCell>
-            <CustomTableCell numeric>Protein (g)</CustomTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {this.rows.map(row => {
-            return (
-              <TableRow className={classes.row} key={row.id}>
-                <CustomTableCell component="th" scope="row">
-                  {row.name}
-                </CustomTableCell>
-                <CustomTableCell numeric>{row.calories}</CustomTableCell>
-                <CustomTableCell numeric>{row.fat}</CustomTableCell>
-                <CustomTableCell numeric>{row.carbs}</CustomTableCell>
-                <CustomTableCell numeric>{row.protein}</CustomTableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </Paper>
+      <Paper className={classes.root} style={{margin: 30}}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell>Title</CustomTableCell>
+              <CustomTableCell>Topic</CustomTableCell>
+              <CustomTableCell>Location</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => {
+              return (
+                <TableRow className={classes.row} key={index}>
+                  <CustomTableCell component="th" scope="row">
+                    {row.topic}
+                  </CustomTableCell>
+                  <CustomTableCell>{row.title}</CustomTableCell>
+                  <CustomTableCell>{row.location}</CustomTableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
     );
   }
 
@@ -123,10 +102,20 @@ rows = [
 Done with table related functions
  */
   render() {
-    // return (
-    //   <Title heading="List of Topics" subheading="All topics are current and updated" />
-    // );
-    return this.renderTable();
+    const rows = this.state.data;
+    if(rows.length <= 0) {
+      return (
+        <div style={{margin: 30}}>
+          <Typography variant="h5" component="h3" style={{margin: 10}}>
+            Getting list of TOPICS
+          </Typography>
+          <Typography component="p" style={{margin: 10}}>
+            Loading.......
+          </Typography>
+        </div>
+      )
+    }
+    return this.renderTable(rows);
   }
 
 }

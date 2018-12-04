@@ -3,7 +3,11 @@ const router = express.Router();
 const shortid = require('shortid');
 const webpush = require('web-push');
 
-const topics = []
+const topics = [{topic: 'Strategy', title: 'Why mobile first approach for enterprises', location: 'Grange Office'},
+  {topic: 'Architecture', title: 'Microservices and their benefits', location: 'Grange Office'},
+  {topic: 'Technology', title: 'PWA answers Android fragmentation problems', location: 'Grange Office'},
+  {topic: 'Technology', title: 'Why I think React is the best framework for web development?', location: 'Grange Office'}
+];
 const public_vapid_key = 'BIqpd1HLEYC2Q_R6vLLPMAL9BdnWNZuX2yD0dL_EdtObQSSSqiwlsQFEOesYQ8EoEUEqmnD25oVoGo0rm9EE9NA';
 const private_vapid_key = 'zW4aOIkx-6RcO-ALhc5XrDJKpzqEKZtlu0bCW6ZLkOc';
 
@@ -20,7 +24,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/add', (req, res, next) => {
-  const id = shortid.generate(); 
+  const id = shortid.generate();
   console.log(req.body);
   const { title } = req.body;
   const { topic } = req.body;
@@ -36,7 +40,7 @@ router.post('/add', (req, res, next) => {
           { "p256dh":
              "BMo8oWwEmLe0DRMl6Kqm8GAuJA6Ib-7ADrWGn3Q9o7WRqmBZR_S4XFbpTT9Qmho9OlfR-aOKVmHJvIBXYptrB4s",
             "auth": "9mjHuAPI4HxXX3rS-wRdAQ"
-          } 
+          }
     }
   res.status(201).send({'id': id, message: 'Added new topic successfully!'});
   webpush.sendNotification(subscription, "Your title was added successfully");
