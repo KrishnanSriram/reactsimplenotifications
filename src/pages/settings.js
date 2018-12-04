@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import SettingsTabs from './settings_tab';
 
 const styles = theme => ({
   root: {
@@ -33,6 +34,7 @@ class SettingsPage extends Component {
           This is SETTINGS page!
         </Typography>
       </Paper>
+      <SettingsTabs />
     </div>
     );
   }
